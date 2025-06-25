@@ -20,3 +20,5 @@ Not only can this macro find minimum values — with small tweaks, it can also c
 The only requirement? The operation must be commutative.
 
 This is a great example of combining algorithmic thinking with Excel automation to solve real-world data problems at scale.
+
+# 🚨 IN CASE YOU DON'T WANT RIKS, I ALSO ADDED THE CODE IN A TXT FILE! 🚨
