@@ -1,0 +1,91 @@
+Public N As Integer
+Public Q As Integer
+Public MAX_ As Integer
+
+Public st() As Integer
+
+Function minimo(a As Integer, b As Integer) As Integer
+    If a < b Then
+        minimo = a
+    Else
+        minimo = b
+    End If
+End Function
+
+
+Function query(L As Integer, R As Integer) As Integer
+    Dim x As Integer
+    Dim pot As Integer
+    x = MAX_
+    pot = 16384
+    For j = 14 To 0 Step -1
+        If pot <= R Then
+            x = minimo(x, st(L, j))
+            L = L + pot
+            R = R - pot
+        End If
+        If R = 0 Then
+            Exit For
+        End If
+        pot = pot / 2
+    Next j
+    query = x
+End Function
+
+
+Public Sub querys_en_rangos()
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+   ' Application.EnableEvents = False
+    
+    Dim t As Double
+    t = Timer
+
+
+
+    N = Range("C1").Value
+    Q = Range("M1").Value
+    MAX_ = Range("C2").Value
+    ReDim st(1 To N + 1, 0 To 15)
+    
+    Dim arreglo() As Variant
+    datos = Range("A2:A" & N + 1).Value
+
+    For i = 1 To N
+        st(i, 0) = datos(i, 1)
+    Next i
+    
+    Dim pot As Integer
+    pot = 1
+    
+    For j = 1 To 14
+        Dim M As Integer
+        M = N + 1 - (pot * 2)
+        For i = 1 To M
+            st(i, j) = minimo(st(i, j - 1), st(i + pot, j - 1))
+        Next i
+        pot = pot * 2
+    Next j
+    
+    Dim queries() As Variant
+    queries = Range("G2:H" & Q + 1).Value
+    Dim res() As Integer
+    ReDim res(1 To Q, 1 To 1)
+    For i = 1 To Q
+        Dim L As Integer
+        Dim R As Integer
+        L = queries(i, 1)
+        R = queries(i, 2)
+        res(i, 1) = query(L, R - L + 1)
+    Next i
+    Range("J2:J" & Q + 1).Value = res
+    
+
+    MsgBox "Complejidad: " & (Timer - t) & " segundos"
+    
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+   ' Application.EnableEvents = True
+
+    
+End Sub
